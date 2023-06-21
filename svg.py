@@ -4,8 +4,6 @@
 
 from js import document
 
-COUNTER = 0
-
 
 _svg_ns = "http://www.w3.org/2000/svg"
 _xlink_ns = "http://www.w3.org/1999/xlink"
@@ -23,8 +21,6 @@ def _tag_func(tag):
                 arg = document.createTextNode(str(arg))
             node.appendChild(arg)
         for key, value in kwargs.items():
-            print("tag: ", tag, "key: ", key, "value: ", value, "count: ", COUNTER)
-            COUNTER += 1
             key = key.lower()
             if key[0:2] == "on":
                 # Event binding passed as argument "onclick", "onfocus"...
