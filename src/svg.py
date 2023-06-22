@@ -14,8 +14,8 @@ def _tag_func(tag):
         global COUNTER
         node = document.createElementNS(_svg_ns, tag)
         # this is mandatory to display svg properly
-        if tag == 'svg':
-            node.setAttribute('xmlns', _svg_ns)
+        if tag == "svg":
+            node.setAttribute("xmlns", _svg_ns)
         for arg in args:
             if isinstance(arg, (str, int, float)):
                 arg = document.createTextNode(str(arg))
@@ -27,14 +27,16 @@ def _tag_func(tag):
                 # Better use method bind of DOMNode objects
                 node.addEventListener(key[2:], value)
             elif key == "style":
-                node.setAttribute("style", ';'.join(f"{k}: {v}"
-                                                    for k, v in value.items()))
+                node.setAttribute(
+                    "style", ";".join(f"{k}: {v}" for k, v in value.items())
+                )
             elif "href" in key:
                 node.setAttributeNS(_xlink_ns, "href", str(value))
             elif value is not False:
                 # option.selected=false sets it to true :-)
-                node.setAttribute(key.replace('_', '-'), str(value))
+                node.setAttribute(key.replace("_", "-"), str(value))
         return node
+
     return func
 
 

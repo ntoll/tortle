@@ -17,6 +17,8 @@ with open(os.path.join(current_dir, "template_turtle.py")) as template_file:
     template = template_file.read()
 
 import inspect
+
+
 def getmethparlist(ob):
     """
     Get strings describing the arguments for the given object
@@ -35,7 +37,7 @@ def getmethparlist(ob):
     realArgs = args[1:]
     defaults = ob.__defaults__ or []
     defaults = ["=%r" % (value,) for value in defaults]
-    defaults = [""] * (len(realArgs)-len(defaults)) + defaults
+    defaults = [""] * (len(realArgs) - len(defaults)) + defaults
     items1 = [arg + dflt for arg, dflt in zip(realArgs, defaults)]
     if varargs is not None:
         items1.append("*" + varargs)
@@ -50,40 +52,130 @@ def getmethparlist(ob):
     return defText, callText
 
 
-_tg_screen_functions = ['addshape', 'animation', 'bgcolor', 'bgpic', 'bye',
-                        'clearscreen', 'colormode', 'delay',
-                        'exitonclick', 'getcanvas', 'getshapes',
-                        'listen', 'mode', 'numinput',
-                        'onkey', 'onkeypress', 'onkeyrelease',
-                        'onscreenclick', 'ontimer', 'register_shape',
-                        'resetscreen', 'save', 'screensize', 'setup',
-                        'setworldcoordinates', 'svg', 'textinput', 'title',
-                        'tracer', 'turtles', 'update',
-                        'window_height', 'window_width']
+_tg_screen_functions = [
+    "addshape",
+    "animation",
+    "bgcolor",
+    "bgpic",
+    "bye",
+    "clearscreen",
+    "colormode",
+    "delay",
+    "exitonclick",
+    "getcanvas",
+    "getshapes",
+    "listen",
+    "mode",
+    "numinput",
+    "onkey",
+    "onkeypress",
+    "onkeyrelease",
+    "onscreenclick",
+    "ontimer",
+    "register_shape",
+    "resetscreen",
+    "save",
+    "screensize",
+    "setup",
+    "setworldcoordinates",
+    "svg",
+    "textinput",
+    "title",
+    "tracer",
+    "turtles",
+    "update",
+    "window_height",
+    "window_width",
+]
 
-_tg_turtle_functions = ['back', 'backward', 'begin_fill', 'begin_poly',
-                        'bk', 'circle', 'clear', 'clearstamp',
-                        'clearstamps', 'clone', 'color', 'degrees',
-                        'distance', 'dot', 'down', 'end_fill', 'end_poly',
-                        'fd', 'fillcolor', 'filling', 'forward',
-                        'get_poly', 'getpen', 'getscreen', 'get_shapepoly',
-                        'getturtle', 'goto', 'heading', 'hideturtle',
-                        'home', 'ht', 'isdown', 'isvisible', 'left', 'lt',
-                        'onclick', 'ondrag', 'onrelease', 'pd', 'pen',
-                        'pencolor', 'pendown', 'pensize', 'penup', 'pos',
-                        'position', 'pu', 'radians', 'right', 'reset',
-                        'resizemode', 'rt', 'seth', 'setheading', 'setpos',
-                        'setposition', 'settiltangle', 'setundobuffer',
-                        'setx', 'sety', 'shape', 'shapesize',
-                        'shapetransform', 'shearfactor', 'showturtle',
-                        'speed', 'st', 'stamp', 'tilt', 'tiltangle',
-                        'towards', 'turtlesize', 'undo',
-                        'undobufferentries', 'up', 'width', 'write',
-                        'xcor', 'ycor']
+_tg_turtle_functions = [
+    "back",
+    "backward",
+    "begin_fill",
+    "begin_poly",
+    "bk",
+    "circle",
+    "clear",
+    "clearstamp",
+    "clearstamps",
+    "clone",
+    "color",
+    "degrees",
+    "distance",
+    "dot",
+    "down",
+    "end_fill",
+    "end_poly",
+    "fd",
+    "fillcolor",
+    "filling",
+    "forward",
+    "get_poly",
+    "getpen",
+    "getscreen",
+    "get_shapepoly",
+    "getturtle",
+    "goto",
+    "heading",
+    "hideturtle",
+    "home",
+    "ht",
+    "isdown",
+    "isvisible",
+    "left",
+    "lt",
+    "onclick",
+    "ondrag",
+    "onrelease",
+    "pd",
+    "pen",
+    "pencolor",
+    "pendown",
+    "pensize",
+    "penup",
+    "pos",
+    "position",
+    "pu",
+    "radians",
+    "right",
+    "reset",
+    "resizemode",
+    "rt",
+    "seth",
+    "setheading",
+    "setpos",
+    "setposition",
+    "settiltangle",
+    "setundobuffer",
+    "setx",
+    "sety",
+    "shape",
+    "shapesize",
+    "shapetransform",
+    "shearfactor",
+    "showturtle",
+    "speed",
+    "st",
+    "stamp",
+    "tilt",
+    "tiltangle",
+    "towards",
+    "turtlesize",
+    "undo",
+    "undobufferentries",
+    "up",
+    "width",
+    "write",
+    "xcor",
+    "ycor",
+]
 
 
-module_all = (_tg_screen_functions + _tg_turtle_functions +
-           ['done', 'mainloop', 'restart', 'replay_scene', 'Turtle', 'Screen'])
+module_all = (
+    _tg_screen_functions
+    + _tg_turtle_functions
+    + ["done", "mainloop", "restart", "replay_scene", "Turtle", "Screen"]
+)
 
 # The following mechanism makes all methods of RawTurtle and Turtle available
 # as functions. So we can enhance, change, add, delete methods to these
@@ -110,15 +202,23 @@ with open(os.path.join(build_dir, "turtle.py"), "w") as turtle_module:
                 print("methodname missing:", methodname)
                 continue
             pl1, pl2 = getmethparlist(method)
-            defstr = __func_body.format(obj=obj, init=init, name=methodname,
-                                        paramslist=pl1, argslist=pl2)
+            defstr = __func_body.format(
+                obj=obj,
+                init=init,
+                name=methodname,
+                paramslist=pl1,
+                argslist=pl2,
+            )
             turtle_module.write(defstr)
 
+    _make_global_funcs(_tg_turtle_functions, Turtle, "Turtle._pen", "Turtle()")
 
-    _make_global_funcs(_tg_turtle_functions, Turtle, 'Turtle._pen', 'Turtle()')
-
-    _make_global_funcs(_tg_screen_functions, Screen, 'Turtle.screen', 'Screen()')
+    _make_global_funcs(
+        _tg_screen_functions, Screen, "Turtle.screen", "Screen()"
+    )
     turtle_module.write(f"\n__all__ = {module_all}\n")
 
 # Emit svg module.
-shutil.copyfile(os.path.join(current_dir, "svg.py"), os.path.join(build_dir, "svg.py"))
+shutil.copyfile(
+    os.path.join(current_dir, "svg.py"), os.path.join(build_dir, "svg.py")
+)
