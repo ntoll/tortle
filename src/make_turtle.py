@@ -1,11 +1,25 @@
+"""
+This script generates the turtle module's top level functions from the classes
+in the template_turtle core module.
+
+It then emits a final "turtle.py" module containing the combined core and
+top level functions to the build directory in the root of this repository.
+"""
+import os
+import shutil
 from template_turtle import *
 
-with open("template_turtle.py") as template_file:
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+build_dir = os.path.realpath(os.path.join(current_dir, "..", "build"))
+
+with open(os.path.join(current_dir, "template_turtle.py")) as template_file:
     template = template_file.read()
 
 import inspect
 def getmethparlist(ob):
-    """Get strings describing the arguments for the given object
+    """
+    Get strings describing the arguments for the given object
 
     Returns a pair of strings representing function parameter lists
     including parenthesis.  The first string is suitable for use in
@@ -83,8 +97,8 @@ def {name}{paramslist}:
 
 """
 
-
-with open("turtle.py", "w") as turtle_module:
+# Emit finalised turtle module.
+with open(os.path.join(build_dir, "turtle.py"), "w") as turtle_module:
     turtle_module.write(template)
     turtle_module.write("# The following functions are auto-generated.\n\n")
 
@@ -105,3 +119,6 @@ with open("turtle.py", "w") as turtle_module:
 
     _make_global_funcs(_tg_screen_functions, Screen, 'Turtle.screen', 'Screen()')
     turtle_module.write(f"\n__all__ = {module_all}\n")
+
+# Emit svg module.
+shutil.copyfile(os.path.join(current_dir, "svg.py"), os.path.join(build_dir, "svg.py"))

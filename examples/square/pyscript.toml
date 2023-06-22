@@ -1,2 +1,3 @@
 [[fetch]]
-files = ["./svg.py", "./turtle.py"]
+from = "/build/"
+files = ["svg.py", "turtle.py"]
