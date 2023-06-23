@@ -1,0 +1,3 @@
+[[fetch]]
+from = "/build/"
+files = ["svg.py", "turtle.py"]

@@ -1,9 +1,13 @@
+# A port of Basthon's Turtle module for PyScript (it works with both Pyodide
+# and MicroPython interpreters), by Nicholas H.Tollervey under the GPLv3
+# License.
+#
 # A port of the Brython's Turtle module to Basthon by Romain Casati
 # under the GPLv3 License.
 #
 # A revised version of CPython's turtle module written for Brython
 #
-
+#
 # Note: This version is not intended to be used in interactive mode,
 # nor use help() to look up methods/functions definitions. The docstrings
 # have thus been shortened considerably as compared with the CPython's version.
@@ -20,14 +24,11 @@
 # 10 degrees.  However, using SVG, if we "slowly" animate an object,
 # rotating it from 350 to 370 degrees, the result will not be the same
 # as rotating it from 350 to 10 degree.
-
-
 import math
 import sys
 import random
-
+import js
 from math import cos, sin
-
 import svg as SVG
 
 
@@ -42,6 +43,7 @@ def generate_id():
 
 # Even though it is a private object, use the same name for the configuration
 # dict as the CPython's module.
+
 
 # Commented out configuration items are those found on the CPython version
 def _default_cfg():
@@ -81,7 +83,26 @@ def set_defaults(**params):
 
 
 class Vec2D(tuple):
-    """used to give a nicer representation of the position"""
+    """
+    Used to give a nicer representation of the position.
+
+    Because we're using SVG, if we "slowly" animate an object, rotating it
+    from 350 to 370 degrees, the result will not be the same as rotating it
+    from 350 to 10 degrees. For this reason, we did not use the Vec2D class
+    from the CPython module and handle the rotations quite differently.
+
+    This version of Vec2D is implemented for completeness.
+
+    Provides (for a, b vectors, k number):
+       a+b vector addition
+       a-b vector subtraction
+       a*b inner product
+       k*a and a*k multiplication with scalar
+       |a| absolute value of a
+
+    As mentioned above, does not provide a.rotate(ange) rotation because of
+    SVG reasons.
+    """
 
     def __add__(self, other):
         return Vec2D(self[0] + other[0], self[1] + other[1])
@@ -91,10 +112,22 @@ class Vec2D(tuple):
             return self[0] * other[0] + self[1] * other[1]
         return Vec2D(self[0] * other, self[1] * other)
 
+    def __rmul__(self, other):
+        if isinstance(other, int) or isinstance(other, float):
+            return Vec2D(self[0] * other, self[1] * other)
+        return NotImplemented
+
+    def __sub__(self, other):
+        return Vec2D(self[0] - other[0], self[1] - other[1])
+
+    def __neg__(self):
+        return Vec2D(-self[0], -self[1])
+
     def __abs__(self):
-        x = self[0]
-        y = self[0]
-        return math.sqrt(x * x + y * y)
+        return math.sqrt(sum(i**2 for i in self))
+
+    def __getnewargs__(self):
+        return (self[0], self[1])
 
     def __repr__(self):
         return "(%.2f, %.2f)" % self
@@ -147,7 +180,6 @@ class TurtleGraphicsError(Exception):
 
 
 class Screen:
-
     _instance = None
     _initialised = False
 
@@ -1272,7 +1304,6 @@ class Turtle(TPen, TNavigator):
     screen = None
 
     def __init__(self, shape=_CFG["shape"], visible=_CFG["visible"]):
-
         self.screen = Screen()
         TPen.__init__(self)
         TNavigator.__init__(self, self.screen.mode())
@@ -1654,8 +1685,24 @@ class Turtle(TPen, TNavigator):
 Pen = Turtle
 
 
-def done():
+def done(target_id=None):
+    """
+    If target_id is given, the SVG element containing the turtle output will
+    become a child of the HtmlElement with that id. If no element with that id
+    can be found, a ValueError is raised.
+
+    If no target_id is given (the default), the document body has a new child
+    appended to it.
+    """
     Screen().show_scene()
+    if target_id:
+        container = js.document.getElementById(target_id)
+        if not container:
+            raise ValueError("No such HtmlElement with id: " + target_id)
+    else:
+        container = js.document.createElement("div")
+        js.document.body.appendChild(container)
+    container.innerHTML = svg()
 
 
 show_scene = done
