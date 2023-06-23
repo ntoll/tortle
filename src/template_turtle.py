@@ -1,12 +1,11 @@
 # A port of Basthon's Turtle module for PyScript (it works with both Pyodide
 # and MicroPython interpreters), by Nicholas H.Tollervey under the GPLv3
-# License.
+# License. ntollervey@anaconda.com
 #
 # A port of the Brython's Turtle module to Basthon by Romain Casati
 # under the GPLv3 License.
 #
 # A revised version of CPython's turtle module written for Brython
-#
 #
 # Note: This version is not intended to be used in interactive mode,
 # nor use help() to look up methods/functions definitions. The docstrings
@@ -925,14 +924,18 @@ class TNavigator:
         self._goto(self._x, y)
 
     def distance(self, x, y=None):
-        """Return the distance from the turtle to (x,y) in turtle step units."""
+        """
+        Return the distance from the turtle to (x,y) in turtle step units.
+        """
         if y is None:
             assert isinstance(x, tuple)
             x, y = x
         return math.sqrt((self._x - x) ** 2 + (self._y - y) ** 2)
 
     def towards(self, x, y=None):
-        """Return the angle of the line from the turtle's position to (x, y)."""
+        """
+        Return the angle of the line from the turtle's position to (x, y).
+        """
         if y is None:
             assert isinstance(x, tuple)
             x, y = x
@@ -960,8 +963,9 @@ class TNavigator:
     seth = setheading
 
     def circle(self, radius, extent=None, steps=None):
-        """Draw an approximate (arc) circle with given radius, using straight
-            line segments.
+        """
+        Draw an approximate (arc) circle with given radius, using straight
+        line segments.
 
         Arguments:
         radius -- a number
@@ -1600,8 +1604,8 @@ class Turtle(TPen, TNavigator):
         _turtle.setAttribute("fill", self._fillcolor)
         _turtle.setAttribute("stroke", self._pencolor)
 
-        # We use timed animations to get it with the proper location, orientation
-        # and appear at the desired time.
+        # We use timed animations to get it with the proper location,
+        # orientation and appear at the desired time.
         previous_end, new_frame_id = self.screen._new_frame()
         x, y = self.screen._convert_coordinates(self._x, self._y)
         if self.screen._animate:
