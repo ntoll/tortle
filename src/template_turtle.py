@@ -1704,6 +1704,7 @@ def done(target=None):
         container = target
     else:
         import js
+
         container = js.document.createElement("div")
         js.document.body.appendChild(container)
     container.innerHTML = svg()

@@ -8,4 +8,4 @@ turtle: clean
 	python src/make_turtle.py
 
 serve: turtle
-	python -m http.server
+	python3 server.py
