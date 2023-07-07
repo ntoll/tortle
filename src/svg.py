@@ -105,7 +105,7 @@ def _tag_func(tag):
         node = ElementNode(tagName=tag)
         # this is mandatory to display svg properly
         if tag == "svg":
-            node.attributes["xmlns"] = _svg_ns
+            node.setAttribute("xmlns", _svg_ns)
         for arg in args:
             if isinstance(arg, (str, int, float)):
                 arg = TextNode(nodeValue=str(arg))
@@ -116,11 +116,11 @@ def _tag_func(tag):
                 # Ignore event handlers within the SVG. This shouldn't happen.
                 pass
             elif key == "style":
-                node.attributes["style"] = ";".join(
-                    f"{k}: {v}" for k, v in value.items()
+                node.setAttribute(
+                    "style", ";".join(f"{k}: {v}" for k, v in value.items())
                 )
-            elif value:
-                node.attributes[key.replace("_", "-")] = str(value)
+            elif value is not False:
+                node.setAttribute(key.replace("_", "-"), str(value))
         return node
 
     return func
