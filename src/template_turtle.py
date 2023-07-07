@@ -1,32 +1,33 @@
-# A port of Basthon's Turtle module for PyScript (it works with both Pyodide
-# and MicroPython interpreters), by Nicholas H.Tollervey under the GPLv3
-# License. ntollervey@anaconda.com
-#
-# A port of the Brython's Turtle module to Basthon by Romain Casati
-# under the GPLv3 License.
-#
-# A revised version of CPython's turtle module written for Brython
-#
-# Note: This version is not intended to be used in interactive mode,
-# nor use help() to look up methods/functions definitions. The docstrings
-# have thus been shortened considerably as compared with the CPython's version.
-#
-# All public methods/functions of the CPython version should exist, if only
-# to print out a warning that they are not implemented. The intent is to make
-# it easier to "port" any existing turtle program from CPython to the browser.
-#
-# IMPORTANT: We use SVG for drawing turtles. If we have a turtle at an angle
-# of 350 degrees and we rotate it by an additional 20 degrees, we will have
-# a turtle at an angle of 370 degrees.  For turtles drawn periodically on
-# a screen (like typical animations, including the CPython turtle module),
-# drawing a turtle with a rotation of 370 degrees is the same as a rotation of
-# 10 degrees.  However, using SVG, if we "slowly" animate an object,
-# rotating it from 350 to 370 degrees, the result will not be the same
-# as rotating it from 350 to 10 degree.
+"""
+A port of Basthon's Turtle module for PyScript (it works with both Pyodide
+and MicroPython interpreters), by Nicholas H.Tollervey under the GPLv3
+License. ntollervey@anaconda.com
+
+A port of the Brython's Turtle module to Basthon by Romain Casati
+under the GPLv3 License.
+
+A revised version of CPython's turtle module written for Brython
+
+Note: This version is not intended to be used in interactive mode,
+nor use help() to look up methods/functions definitions. The docstrings
+have thus been shortened considerably as compared with the CPython's version.
+
+All public methods/functions of the CPython version should exist, if only
+to print out a warning that they are not implemented. The intent is to make
+it easier to "port" any existing turtle program from CPython to the browser.
+
+IMPORTANT: We use SVG for drawing turtles. If we have a turtle at an angle
+of 350 degrees and we rotate it by an additional 20 degrees, we will have
+a turtle at an angle of 370 degrees.  For turtles drawn periodically on
+a screen (like typical animations, including the CPython turtle module),
+drawing a turtle with a rotation of 370 degrees is the same as a rotation of
+10 degrees.  However, using SVG, if we "slowly" animate an object,
+rotating it from 350 to 370 degrees, the result will not be the same
+as rotating it from 350 to 10 degree.
+"""
 import math
 import sys
 import random
-import js
 from math import cos, sin
 import svg as SVG
 
@@ -1689,7 +1690,7 @@ class Turtle(TPen, TNavigator):
 Pen = Turtle
 
 
-def done(target_id=None):
+def done(target=None):
     """
     If target_id is given, the SVG element containing the turtle output will
     become a child of the HtmlElement with that id. If no element with that id
@@ -1699,11 +1700,10 @@ def done(target_id=None):
     appended to it.
     """
     Screen().show_scene()
-    if target_id:
-        container = js.document.getElementById(target_id)
-        if not container:
-            raise ValueError("No such HtmlElement with id: " + target_id)
+    if target:
+        container = target
     else:
+        import js
         container = js.document.createElement("div")
         js.document.body.appendChild(container)
     container.innerHTML = svg()
